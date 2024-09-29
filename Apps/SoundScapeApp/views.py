@@ -1,5 +1,8 @@
-from django.shortcuts import render
 from spotipy.oauth2 import SpotifyClientCredentials
+import spotipy
+from spotipy.oauth2 import SpotifyOAuth
+from django.conf import settings
+from django.shortcuts import redirect, render
 
 
 # Create your views here.
@@ -13,20 +16,22 @@ def fetch_spotify_data(request):
         client_secret=settings.SPOTIFY_CLIENT_SECRET
     ))
 
-    # Search for a specific song (can be dynamic later)
-    query = request.GET.get('q', 'Imagine')  # Default to 'Imagine' if no query
-    results = sp.search(q=query, limit=10)
+    # Get the search query from the request, or default to an empty string
+    query = request.GET.get('q', '')  # Use an empty string if no query is provided
 
-    # Extract relevant song data
-    songs = results['tracks']['items']
+    try:
+        results = sp.search(q=query, limit=10)
+        songs = results['tracks']['items']
+    except Exception as e:
+        songs = []
+        print(f"Error fetching data from Spotify: {e}")
+
 
     # Pass the data to the template
-    return render(request, 'SpotifyData.html', {'songs': songs, 'query': query})
-
-import spotipy
-from spotipy.oauth2 import SpotifyOAuth
-from django.conf import settings
-from django.shortcuts import redirect, render
+    return render(request, 'SpotifyData.html', {
+        'songs': songs,
+        'query': query,  # Pass the query back to the template for the form
+    })
 
 # Spotify OAuth settings (Authorization Code Flow)
 def spotify_authenticate(request):
