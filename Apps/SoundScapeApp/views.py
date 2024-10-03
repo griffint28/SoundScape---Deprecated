@@ -39,7 +39,7 @@ def spotify_authenticate(request):
         client_id=settings.SPOTIFY_CLIENT_ID,
         client_secret=settings.SPOTIFY_CLIENT_SECRET,
         redirect_uri=settings.SPOTIFY_REDIRECT_URI,  # Use the redirect URI you set in the dashboard
-        scope="user-library-read playlist-read-private"  # Adjust scope based on your app's needs
+        scope="user-top-read"  # Adjust scope based on your app's needs
     )
 
     # Step 1: Get the authorization URL
@@ -54,23 +54,18 @@ def spotify_callback(request):
         client_id=settings.SPOTIFY_CLIENT_ID,
         client_secret=settings.SPOTIFY_CLIENT_SECRET,
         redirect_uri=settings.SPOTIFY_REDIRECT_URI,
-        scope="user-library-read playlist-read-private"
+        scope='user-top-read'
     )
 
-    # Step 3: Spotify redirects back to this callback URL with a code in the query parameters
     code = request.GET.get('code')
-
-    # Step 4: Exchange code for access token
     token_info = sp_oauth.get_access_token(code)
 
-    if token_info:
-        access_token = token_info['access_token']
+    sp = spotipy.Spotify(auth=token_info['access_token'])
 
-        # Step 5: Use the access token to make requests to Spotify on behalf of the user
-        sp = spotipy.Spotify(auth=access_token)
-        user_data = sp.current_user()
-        saved_tracks = sp.current_user_saved_tracks(limit=10)
+    # Get the time range from the user's request (default to medium_term if none provided)
+    time_range = request.GET.get('time_range', 'medium_term')  # Can be 'short_term', 'medium_term', 'long_term'
 
-        return render(request, 'SpotifyUserData.html', {'user': user_data, 'tracks': saved_tracks})
-    else:
-        return render(request, 'Error.html', {'message': 'Authentication failed'})
+    # Fetch the user's top tracks with the selected time range
+    top_tracks = sp.current_user_top_tracks(time_range=time_range, limit=10)['items']
+
+    return render(request, 'SpotifyUserData.html', {'tracks': top_tracks, 'time_range': time_range})
