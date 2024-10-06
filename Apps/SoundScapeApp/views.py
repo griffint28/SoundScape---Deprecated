@@ -69,3 +69,23 @@ def spotify_callback(request):
     top_tracks = sp.current_user_top_tracks(time_range=time_range, limit=10)['items']
 
     return render(request, 'SpotifyUserData.html', {'tracks': top_tracks, 'time_range': time_range})
+
+
+def top_artists(request):
+    # Default time range (e.g., 'medium_term')
+    time_range = request.GET.get('time_range', 'medium_term')
+
+    # Fetch the user's top artists
+    results = sp.current_user_top_artists(limit=20, time_range=time_range)
+
+    # Extract artist details
+    top_artists = []
+    for artist in results['items']:
+        top_artists.append({
+            'name': artist['name'],
+            'popularity': artist['popularity'],
+            'genres': artist['genres'],
+            'image_url': artist['images'][0]['url'] if artist['images'] else None,
+        })
+
+    return render(request, 'UsersTopArtists.html', {'top_artists': top_artists, 'time_range': time_range})

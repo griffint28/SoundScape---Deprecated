@@ -6,4 +6,5 @@ urlpatterns = [
     path('spotify/', views.fetch_spotify_data, name='fetch_spotify_data'),
     path('spotify-login/', views.spotify_authenticate, name='spotify_authenticate'),
     path('callback/', views.spotify_callback, name='spotify_callback'),
+    path('top-artists/', views.top_artists, name='top_artists'),
 ]
