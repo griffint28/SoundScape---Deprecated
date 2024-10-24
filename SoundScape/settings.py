@@ -53,6 +53,9 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
+    'django_extensions',
+    'social_django',
+    'allauth.socialaccount.providers.spotify',
 ]
 
 MIDDLEWARE = [
@@ -63,7 +66,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'allauth.account.middleware.AccountMiddleware'
+    'allauth.account.middleware.AccountMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware',
 ]
 
 ROOT_URLCONF = 'SoundScape.urls'
@@ -145,7 +149,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',  # Default
-    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
 SITE_ID = 1  # Default value
@@ -154,3 +158,16 @@ SITE_ID = 1  # Default value
 LOGIN_REDIRECT_URL = 'index'  # Redirect after login
 ACCOUNT_LOGOUT_REDIRECT_URL = 'home'  # Redirect after logout
 ACCOUNT_SIGNUP_REDIRECT_URL = 'index'  # Redirect after signup
+
+SOCIALACCOUNT_PROVIDERS = {
+    'spotify': {
+        'SCOPE': [
+            'user-read-email',
+            'user-read-private',
+            # other scopes...
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}
