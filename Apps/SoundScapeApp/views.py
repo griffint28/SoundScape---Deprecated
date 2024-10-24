@@ -1,3 +1,6 @@
+from allauth.account.views import LoginView, SignupView
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse_lazy
 from spotipy.oauth2 import SpotifyClientCredentials
 import spotipy
 from spotipy.oauth2 import SpotifyOAuth
@@ -6,9 +9,11 @@ from django.shortcuts import redirect, render
 
 
 # Create your views here.
+@login_required
 def index(request):
     return render(request, 'AppBase.html')
 
+@login_required
 def fetch_spotify_data(request):
     # Spotify API authorization
     sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
@@ -34,6 +39,7 @@ def fetch_spotify_data(request):
     })
 
 # Spotify OAuth settings (Authorization Code Flow)
+@login_required
 def spotify_authenticate(request):
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIFY_CLIENT_ID,
@@ -49,6 +55,7 @@ def spotify_authenticate(request):
     return redirect(auth_url)
 
 # Callback view where Spotify will redirect the user after authentication
+@login_required
 def spotify_callback(request):
     sp_oauth = SpotifyOAuth(
         client_id=settings.SPOTIFY_CLIENT_ID,
@@ -70,7 +77,7 @@ def spotify_callback(request):
 
     return render(request, 'SpotifyUserData.html', {'tracks': top_tracks, 'time_range': time_range})
 
-
+@login_required
 def top_artists(request):
     # Default time range (e.g., 'medium_term')
     time_range = request.GET.get('time_range', 'medium_term')
@@ -89,3 +96,20 @@ def top_artists(request):
         })
 
     return render(request, 'UsersTopArtists.html', {'top_artists': top_artists, 'time_range': time_range})
+
+@login_required
+def profile_view(request):
+    return render(request, 'Profile.html', {'user': request.user})
+
+class CustomLoginView(LoginView):
+    template_name = 'account/login.html'  # Your custom login template
+    success_url = reverse_lazy('index')  # Redirect after successful login
+
+
+class CustomSignupView(SignupView):
+    template_name = 'account/signup.html'  # Your custom signup template
+    success_url = reverse_lazy('index')  # Redirect after successful signup
+
+
+def home(request):
+    return render(request, 'Home.html')

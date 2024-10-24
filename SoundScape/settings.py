@@ -48,7 +48,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'Apps.SoundScapeApp'
+    'Apps.SoundScapeApp',
+    'django.contrib.sites',  # Required for Allauth
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
 ]
 
 MIDDLEWARE = [
@@ -59,6 +63,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'allauth.account.middleware.AccountMiddleware'
 ]
 
 ROOT_URLCONF = 'SoundScape.urls'
@@ -137,3 +142,15 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTHENTICATION_BACKENDS = (
+    'django.contrib.auth.backends.ModelBackend',  # Default
+    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth
+)
+
+SITE_ID = 1  # Default value
+
+# settings.py
+LOGIN_REDIRECT_URL = 'index'  # Redirect after login
+ACCOUNT_LOGOUT_REDIRECT_URL = 'home'  # Redirect after logout
+ACCOUNT_SIGNUP_REDIRECT_URL = 'index'  # Redirect after signup
