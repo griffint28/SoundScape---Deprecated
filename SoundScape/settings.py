@@ -161,13 +161,11 @@ ACCOUNT_SIGNUP_REDIRECT_URL = 'index'  # Redirect after signup
 
 SOCIALACCOUNT_PROVIDERS = {
     'spotify': {
-        'SCOPE': [
-            'user-read-email',
-            'user-read-private',
-            # other scopes...
-        ],
-        'AUTH_PARAMS': {
-            'access_type': 'online',
-        }
+        'CLIENT_ID': SPOTIFY_CLIENT_ID,
+        'SECRET': SPOTIFY_CLIENT_SECRET,
+        'SCOPE': ['user-top-read'],
+        'AUTH_PARAMS': {'response_type': 'code'},
+        'REDIRECT_URI': 'http://localhost:8000/accounts/spotify/login/callback/'
     }
 }
+SOCIALACCOUNT_STORE_TOKENS = True
