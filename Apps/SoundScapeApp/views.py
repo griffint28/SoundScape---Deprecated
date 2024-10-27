@@ -1,12 +1,12 @@
 from allauth.account.views import LoginView, SignupView
+from allauth.socialaccount.models import SocialAccount, SocialToken, SocialApp
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
-from spotipy.oauth2 import SpotifyClientCredentials
+from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import spotipy
-from spotipy.oauth2 import SpotifyOAuth
 from django.conf import settings
-from django.shortcuts import redirect, render
-
+from django.shortcuts import render
+import requests
 
 # Create your views here.
 @login_required
@@ -29,7 +29,7 @@ def fetch_spotify_data(request):
         songs = results['tracks']['items']
     except Exception as e:
         songs = []
-        print(f"Error fetching data from Spotify: {e}")
+        return None
 
 
     # Pass the data to the template
@@ -38,64 +38,93 @@ def fetch_spotify_data(request):
         'query': query,  # Pass the query back to the template for the form
     })
 
-# Spotify OAuth settings (Authorization Code Flow)
 @login_required
-def spotify_authenticate(request):
-    sp_oauth = SpotifyOAuth(
-        client_id=settings.SPOTIFY_CLIENT_ID,
-        client_secret=settings.SPOTIFY_CLIENT_SECRET,
-        redirect_uri=settings.SPOTIFY_REDIRECT_URI,  # Use the redirect URI you set in the dashboard
-        scope="user-top-read"  # Adjust scope based on your app's needs
-    )
+def top_tracks(request):
+    social_account = SocialAccount.objects.get(user=request.user, provider='spotify')
+    # Attempt to retrieve the associated token
+    social_token = SocialToken.objects.filter(account=social_account).first()
+    access_token = social_account.socialtoken_set.first().token  # Get the access token
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+    }
+    time_range = request.GET.get('time_range', 'medium_term')
 
-    # Step 1: Get the authorization URL
-    auth_url = sp_oauth.get_authorize_url()
+    response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
+    if response.status_code == 401:  # Token expired
+        # Get Spotify app credentials from Allauth
+        refresh_token = social_token.token_secret
+        social_app = SocialApp.objects.get(provider='spotify')
+        client_id = social_app.client_id
+        client_secret = social_app.secret
 
-    # Step 2: Redirect user to Spotify for authorization
-    return redirect(auth_url)
+        # Refresh the token
+        sp_oauth = SpotifyOAuth(client_id,
+                                client_secret,
+                                redirect_uri='http://127.0.0.1:8000/accounts/spotify/login/callback/',
+                                scope='user-top-read')
 
-# Callback view where Spotify will redirect the user after authentication
-@login_required
-def spotify_callback(request):
-    sp_oauth = SpotifyOAuth(
-        client_id=settings.SPOTIFY_CLIENT_ID,
-        client_secret=settings.SPOTIFY_CLIENT_SECRET,
-        redirect_uri=settings.SPOTIFY_REDIRECT_URI,
-        scope='user-top-read'
-    )
+        new_token_info = sp_oauth.refresh_access_token(refresh_token)
 
-    code = request.GET.get('code')
-    token_info = sp_oauth.get_access_token(code)
+        # Update the social token in the database
+        social_token.token = new_token_info['access_token']
+        social_token.save()
 
-    sp = spotipy.Spotify(auth=token_info['access_token'])
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+        }
+        response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
 
-    # Get the time range from the user's request (default to medium_term if none provided)
-    time_range = request.GET.get('time_range', 'medium_term')  # Can be 'short_term', 'medium_term', 'long_term'
-
-    # Fetch the user's top tracks with the selected time range
-    top_tracks = sp.current_user_top_tracks(time_range=time_range, limit=10)['items']
-
-    return render(request, 'SpotifyUserData.html', {'tracks': top_tracks, 'time_range': time_range})
+    if response.status_code == 200:
+        return render(request, 'SpotifyUserData.html', {'tracks': response.json()['items'],  'time_range': time_range})
+    # Return the user's top tracks data
+    else:
+        # Handle error response
+        return None
 
 @login_required
 def top_artists(request):
-    # Default time range (e.g., 'medium_term')
+    social_account = SocialAccount.objects.get(user=request.user, provider='spotify')
+    # Attempt to retrieve the associated token
+    social_token = SocialToken.objects.filter(account=social_account).first()
+    access_token = social_account.socialtoken_set.first().token  # Get the access token
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+    }
+
     time_range = request.GET.get('time_range', 'medium_term')
 
-    # Fetch the user's top artists
-    results = sp.current_user_top_artists(limit=20, time_range=time_range)
+    response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
 
-    # Extract artist details
-    top_artists = []
-    for artist in results['items']:
-        top_artists.append({
-            'name': artist['name'],
-            'popularity': artist['popularity'],
-            'genres': artist['genres'],
-            'image_url': artist['images'][0]['url'] if artist['images'] else None,
-        })
+    if response.status_code == 401:  # Token expired
+        # Get Spotify app credentials from Allauth
+        refresh_token = social_token.token_secret
+        social_app = SocialApp.objects.get(provider='spotify')
+        client_id = social_app.client_id
+        client_secret = social_app.secret
 
-    return render(request, 'UsersTopArtists.html', {'top_artists': top_artists, 'time_range': time_range})
+        # Refresh the token
+        sp_oauth = SpotifyOAuth(client_id,
+                                client_secret,
+                                redirect_uri='http://127.0.0.1:8000/accounts/spotify/login/callback/',
+                                scope='user-top-read')
+
+        new_token_info = sp_oauth.refresh_access_token(refresh_token)
+
+        # Update the social token in the database
+        social_token.token = new_token_info['access_token']
+        social_token.save()
+
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+        }
+        response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
+
+    if response.status_code == 200:
+        return render(request, 'UsersTopArtists.html', {'top_artists': response.json()['items'],  'time_range': time_range})
+    # Return the user's top tracks data
+    else:
+        # Handle error response
+        return None
 
 @login_required
 def profile_view(request):
