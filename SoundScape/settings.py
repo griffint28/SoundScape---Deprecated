@@ -35,7 +35,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
-    'localhost'
+    'localhost',
+    '.elasticbeanstalk.com'
 ]
 
 
@@ -75,7 +76,7 @@ ROOT_URLCONF = 'SoundScape.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'Apps/SoundScapeApp/Templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
