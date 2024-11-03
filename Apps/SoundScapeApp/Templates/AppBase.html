@@ -17,7 +17,6 @@
                 <li><a href="/spotify/">Song Search</a></li>
                 <li><a href="/top-tracks/">Personal Song Statistics</a></li>
                 <li><a href="/top-artists/">Personal Artists Statistics</a></li>
-                <li><div class="close-btn" onclick="toggleMenu()">X</div></li>
             </ul>
         </nav>
         <div class="hamburger" onclick="toggleMenu()">
@@ -54,14 +53,25 @@
     <footer>
         <p>&copy; 2022 Music Web App. All rights reserved.</p>
     </footer>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+    </script>
 </body>
-<script>
-    function toggleMenu() {
-        const nav = document.querySelector('nav ul');
-        const closeBtn = document.querySelector('.close-btn');
-        const isMenuOpen = nav.style.display === 'flex';
-        nav.style.display = isMenuOpen ? 'none' : 'flex';
-        closeBtn.style.display = isMenuOpen ? 'none' : 'block';
-    }
-</script>
 </html>

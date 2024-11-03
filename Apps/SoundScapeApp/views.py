@@ -50,6 +50,7 @@ def top_tracks(request):
     time_range = request.GET.get('time_range', 'medium_term')
 
     response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
+    print(response.json())
     if response.status_code == 401:  # Token expired
         # Get Spotify app credentials from Allauth
         refresh_token = social_token.token_secret
