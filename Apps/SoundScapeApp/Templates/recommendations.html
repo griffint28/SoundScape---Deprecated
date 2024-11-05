@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recommendations</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'CSS/recommendations.css' %}">
+</head>
+<body>
+<header>
+    <nav>
+        <ul>
+            <li><a href="/index/">Home</a></li>
+            <li><a href="#">Playlists</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/spotify/">Song Search</a></li>
+            <li><a href="/top-tracks/">Personal Song Statistics</a></li>
+            <li><a href="/top-artists/">Personal Artists Statistics</a></li>
+            <li><a href="/recommendations/">Personal Recommendations</a></li>
+        </ul>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</header>
+<main>
+    <h1>Recommendations</h1>
+    <ul>
+        {% for track in recTracks %}
+            <li>
+                <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}'s image" width="100">
+                <strong>{{ track.name }}</strong><br>
+                Artist: {{ track.artists.0.name }}<br>
+                Album: {{ track.album.name }}<br>
+                Popularity: {{ track.popularity }}
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+<script>
+    function toggleMenu() {
+        const nav = document.querySelector('nav ul');
+        const hamburger = document.querySelector('.hamburger');
+        nav.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(event) {
+        const nav = document.querySelector('nav ul');
+        const hamburger = document.querySelector('.hamburger');
+        const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+        if (!isClickInside) {
+            nav.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+
+</script>
+</body>
+</html>
