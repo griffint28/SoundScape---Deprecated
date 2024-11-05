@@ -73,7 +73,7 @@ def top_tracks(request):
         headers = {
             'Authorization': f'Bearer {access_token}',
         }
-        response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
+        response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
 
     if response.status_code == 200:
         return render(request, 'SpotifyUserData.html', {'tracks': response.json()['items'],  'time_range': time_range})
@@ -143,3 +143,50 @@ class CustomSignupView(SignupView):
 
 def home(request):
     return render(request, 'Home.html')
+
+
+def recommendations(request):
+    social_account = SocialAccount.objects.get(user=request.user, provider='spotify')
+    # Attempt to retrieve the associated token
+    social_token = SocialToken.objects.filter(account=social_account).first()
+    access_token = social_account.socialtoken_set.first().token  # Get the access token
+    headers = {
+        'Authorization': f'Bearer {access_token}',
+    }
+
+    time_range = request.GET.get('time_range', 'medium_term')
+
+    tracksResponse = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
+    artistsResponse = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
+
+    tracksResponseIDs = []
+    for track in tracksResponse.json()['items']:
+        tracksResponseIDs.append(track['id'])
+
+
+    artistsResponseIDs = []
+    artistsGenres = []
+    for artist in artistsResponse.json()['items']:
+        artistsResponseIDs.append(artist['id'])
+        artistsGenres.append(artist['genres'][0])
+
+    seed_artists = artistsResponseIDs[0]
+    seed_tracks = tracksResponseIDs[0]
+    seed_genres = artistsGenres[0]
+
+    response =requests.get('https://api.spotify.com/v1/recommendations?'
+                           'seed_artists=' + seed_artists
+                           + '&seed_genres=' + seed_genres
+                           + '&seed_tracks=' + seed_tracks
+                           + '&max_popularity=70', headers=headers)
+
+    # print(tracksResponseIDs)
+    # print(artistsResponseIDs)
+    # print(artistsGenres)
+    print(response.json())
+
+    recTracks = []
+    for recTrack in response.json()['tracks']:
+        recTracks.append(recTrack['name'] + ' by ' + recTrack['artists'][0]['name'])
+
+    return render(request, 'Recommendations.html', {'recTracks': response.json()['tracks']})
