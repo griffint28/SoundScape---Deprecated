@@ -1,31 +1,72 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Most Listened-To Artists</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Top Artists</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
 </head>
 <body>
-<h1>Most Listened-To Artists</h1>
+<header>
+    <nav>
+        <ul>
+            <li><a href="#">Home</a></li>
+            <li><a href="#">Artists</a></li>
+            <li><a href="#">Playlists</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="/spotify/">Song Search</a></li>
+            <li><a href="/top-tracks/">Personal Song Statistics</a></li>
+            <li><a href="/top-artists/">Personal Artists Statistics</a></li>
+        </ul>
+    </nav>
+    <div class="hamburger" onclick="toggleMenu()">
+        <div></div>
+        <div></div>
+        <div></div>
+    </div>
+</header>
+<main>
+    <h1>Most Listened-To Artists</h1>
 
-<form method="get">
-    <label for="time_range">Select Time Range:</label>
-    <select name="time_range" id="time_range" onchange="this.form.submit()">
-        <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
-        <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
-        <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
-    </select>
-</form>
+    <form method="get">
+        <label for="time_range">Select Time Range:</label>
+        <select name="time_range" id="time_range" onchange="this.form.submit()">
+            <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
+            <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
+            <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
+        </select>
+    </form>
 
-<ul>
-    {% for artist in top_artists %}
-        <li>
-            <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
-            <strong>{{ artist.name }}</strong><br>
-            Genres: {{ artist.genres|join:", " }}<br>
-            Popularity: {{ artist.popularity }}
-        </li>
-    {% endfor %}
-</ul>
+    <ul>
+        {% for artist in top_artists %}
+            <li>
+                <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
+                <strong>{{ artist.name }}</strong><br>
+                Genres: {{ artist.genres|join:", " }}<br>
+                Popularity: {{ artist.popularity }}
+            </li>
+        {% endfor %}
+    </ul>
+</main>
+<script>
+    function toggleMenu() {
+        const nav = document.querySelector('nav ul');
+        const hamburger = document.querySelector('.hamburger');
+        nav.classList.toggle('active');
+        hamburger.classList.toggle('active');
+    }
+
+    document.addEventListener('click', function(event) {
+        const nav = document.querySelector('nav ul');
+        const hamburger = document.querySelector('.hamburger');
+        const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+        if (!isClickInside) {
+            nav.classList.remove('active');
+            hamburger.classList.remove('active');
+        }
+    });
+
+</script>
 </body>
 </html>

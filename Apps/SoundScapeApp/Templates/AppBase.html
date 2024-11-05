@@ -1,14 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Music Web App</title>
     {% load static %}
-    <link rel="stylesheet" href="{% static 'CSS/base.css' %}">
+    <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
 </head>
 <body>
     <header>
-        <h1>Welcome {{ user.username }} to the Music Web App!</h1>
         <nav>
             <ul>
                 <li><a href="#">Home</a></li>
@@ -20,9 +19,16 @@
                 <li><a href="/top-artists/">Personal Artists Statistics</a></li>
             </ul>
         </nav>
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
     </header>
-    
     <main>
+        <section>
+            <h1 id = "HomeBackground">Welcome {{ user.username }} to SoundScape</h1>
+        </section>
         <section>
             <h2>Featured Artists</h2>
             <ul>
@@ -47,5 +53,25 @@
     <footer>
         <p>&copy; 2022 Music Web App. All rights reserved.</p>
     </footer>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+    </script>
 </body>
 </html>
