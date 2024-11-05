@@ -7,6 +7,7 @@ urlpatterns = [
     path('spotify/', views.fetch_spotify_data, name='fetch_spotify_data'),
     path('top-artists/', views.top_artists, name='top_artists'),
     path('top-tracks/', views.top_tracks, name='top_tracks'),
+    path('recommendations/', views.recommendations, name='recommendations'),
     path('accounts/login/', CustomLoginView.as_view(), name='account_login'),
     path('accounts/signup/', CustomSignupView.as_view(), name='account_signup'),
     path('accounts/profile/', views.profile_view, name='profile_view'),
