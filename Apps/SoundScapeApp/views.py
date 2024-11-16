@@ -1,12 +1,16 @@
-from allauth.account.views import LoginView, SignupView
 from allauth.socialaccount.models import SocialAccount, SocialToken, SocialApp
 from django.contrib.auth.decorators import login_required
-from django.urls import reverse_lazy
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 import spotipy
-from django.conf import settings
 from django.shortcuts import render
+from django.shortcuts import redirect
+from django.conf import settings
+from urllib.parse import urlencode
 import requests
+import datetime
+
+from Apps.SoundScapeApp.models import SpotifyToken
+
 
 # Create your views here.
 @login_required
@@ -131,19 +135,8 @@ def top_artists(request):
 def profile_view(request):
     return render(request, 'Profile.html', {'user': request.user})
 
-class CustomLoginView(LoginView):
-    template_name = 'account/login.html'  # Your custom login template
-    success_url = reverse_lazy('index')  # Redirect after successful login
-
-
-class CustomSignupView(SignupView):
-    template_name = 'account/signup.html'  # Your custom signup template
-    success_url = reverse_lazy('index')  # Redirect after successful signup
-
-
 def home(request):
     return render(request, 'Home.html')
-
 
 def recommendations(request):
     social_account = SocialAccount.objects.get(user=request.user, provider='spotify')
@@ -190,3 +183,43 @@ def recommendations(request):
         recTracks.append(recTrack['name'] + ' by ' + recTrack['artists'][0]['name'])
 
     return render(request, 'Recommendations.html', {'recTracks': response.json()['tracks']})
+
+def spotify_login(request):
+    auth_url = "https://accounts.spotify.com/authorize"
+    print(settings.SPOTIFY_REDIRECT_URI)
+    params = {
+        "client_id": settings.SPOTIFY_CLIENT_ID,
+        "response_type": "code",
+        "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
+        "scope": "user-read-email",
+    }
+    return redirect(f"{auth_url}?{urlencode(params)}")
+
+def spotify_callback(request):
+    print("callback")
+    code = request.GET.get("code")
+    token_url = "https://accounts.spotify.com/api/token"
+    payload = {
+        "grant_type": "authorization_code",
+        "code": code,
+        "redirect_uri": settings.SPOTIFY_REDIRECT_URI,
+        "client_id": settings.SPOTIFY_CLIENT_ID,
+        "client_secret": settings.SPOTIFY_CLIENT_SECRET,
+    }
+    response = requests.post(token_url, data=payload)
+    token_data = response.json()
+
+    if "access_token" in token_data:
+        user = request.user  # Assumes user is logged in via Allauth
+        SpotifyToken.objects.update_or_create(
+            user=user,
+            defaults={
+                "access_token": token_data["access_token"],
+                "refresh_token": token_data.get("refresh_token"),
+                "token_expiry": datetime.datetime.now() + datetime.timedelta(
+                    seconds=token_data["expires_in"]
+                ),
+            },
+        )
+        return redirect("index")
+    return redirect("error")

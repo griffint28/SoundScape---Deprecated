@@ -222,6 +222,9 @@
 <div class="content">
     <h1>Welcome to SoundScape</h1>
     <p>Your personalized music listening stats, visualized.</p>
+    {% if user.is_authenticated %}
+        <a href="{% url 'account_logout' %}">Logout</a>
+    {% endif %}
 </div>
 
 </body>
