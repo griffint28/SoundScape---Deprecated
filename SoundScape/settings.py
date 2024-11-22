@@ -29,6 +29,7 @@ SECRET_KEY = os.getenv('DJANGO_SECERT_KEY')
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
+SITE_ID = int(os.getenv('SITE_ID'))
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -56,7 +57,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django_extensions',
     'social_django',
-    'allauth.socialaccount.providers.spotify',
 ]
 
 MIDDLEWARE = [
@@ -153,20 +153,25 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-SITE_ID = 1  # Default value
+
+ACCOUNT_ADAPTER = 'Apps.SoundScapeApp.adapters.CustomAccountAdapter'
+
+# General settings
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"  # Login by username or email
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "none"  # 'mandatory', 'optional', or 'none'
+ACCOUNT_USERNAME_REQUIRED = True
+ACCOUNT_SIGNUP_REDIRECT_URL = '/index/'  # Redirect after signup
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 
 # settings.py
-LOGIN_REDIRECT_URL = 'index'  # Redirect after login
-ACCOUNT_LOGOUT_REDIRECT_URL = 'home'  # Redirect after logout
-ACCOUNT_SIGNUP_REDIRECT_URL = 'index'  # Redirect after signup
 
-SOCIALACCOUNT_PROVIDERS = {
-    'spotify': {
-        'CLIENT_ID': SPOTIFY_CLIENT_ID,
-        'SECRET': SPOTIFY_CLIENT_SECRET,
-        'SCOPE': ['user-top-read'],
-        'AUTH_PARAMS': {'response_type': 'code'},
-        'REDIRECT_URI': 'http://localhost:8000/accounts/spotify/login/callback/'
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis database 1
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
     }
 }
-SOCIALACCOUNT_STORE_TOKENS = True
