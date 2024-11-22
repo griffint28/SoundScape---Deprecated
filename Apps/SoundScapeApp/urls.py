@@ -3,7 +3,6 @@ from . import views
 
 urlpatterns = [
     path('index/', views.index, name='index'),
-    path('spotify/', views.fetch_spotify_data, name='fetch_spotify_data'),
     path('top-artists/', views.top_artists, name='top_artists'),
     path('top-tracks/', views.top_tracks, name='top_tracks'),
     path('recommendations/', views.recommendations, name='recommendations'),

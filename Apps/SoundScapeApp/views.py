@@ -1,6 +1,4 @@
 from django.contrib.auth.decorators import login_required
-from spotipy.oauth2 import SpotifyClientCredentials
-import spotipy
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
@@ -18,34 +16,8 @@ def index(request):
     return render(request, 'AppBase.html')
 
 @login_required
-def fetch_spotify_data(request):
-    # Spotify API authorization
-    sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
-        client_id=settings.SPOTIFY_CLIENT_ID,
-        client_secret=settings.SPOTIFY_CLIENT_SECRET
-    ))
-
-    # Get the search query from the request, or default to an empty string
-    query = request.GET.get('q', '')  # Use an empty string if no query is provided
-
-    try:
-        results = sp.search(q=query, limit=10)
-        songs = results['tracks']['items']
-    except Exception as e:
-        songs = []
-        return None
-
-
-    # Pass the data to the template
-    return render(request, 'SpotifyData.html', {
-        'songs': songs,
-        'query': query,  # Pass the query back to the template for the form
-    })
-
-@login_required
 def top_tracks(request):
     access_token = SpotifyToken.objects.get(user=request.user).access_token
-    print("yo", request.user, access_token)
 
     headers = {
         'Authorization': f'Bearer {access_token}',
@@ -53,10 +25,8 @@ def top_tracks(request):
     time_range = request.GET.get('time_range', 'medium_term')
 
     response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
-    print(response.content)
 
     if response.status_code == 401:  # Token expired
-        print("Token expired")
         spotify_login(request, status='Expired')
         response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
 
@@ -79,7 +49,6 @@ def top_artists(request):
     response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
 
     if response.status_code == 401:  # Token expired
-        print("Token expired")
         spotify_login(request, status='Expired')
         response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
 
@@ -97,6 +66,7 @@ def profile_view(request):
 def home(request):
     return render(request, 'Home.html')
 
+@login_required
 def recommendations(request):
     access_token = SpotifyToken.objects.get(user=request.user).access_token
     headers = {
@@ -129,11 +99,6 @@ def recommendations(request):
                            + '&seed_tracks=' + seed_tracks
                            + '&max_popularity=70', headers=headers)
 
-    # print(tracksResponseIDs)
-    # print(artistsResponseIDs)
-    # print(artistsGenres)
-    print(response.json())
-
     recTracks = []
     for recTrack in response.json()['tracks']:
         recTracks.append(recTrack['name'] + ' by ' + recTrack['artists'][0]['name'])
@@ -141,11 +106,10 @@ def recommendations(request):
     return render(request, 'Recommendations.html', {'recTracks': response.json()['tracks']})
 
 def spotify_login(request, status=None):
-    print("before setting", request.user)
-
     cache.set('User', request.user, timeout=60*15)  # Cache for 15 minutes
 
     if status == 'Expired':
+        print("token expired, refreshing")
         token = SpotifyToken.objects.get(user=request.user)
         refresh_url = "https://accounts.spotify.com/api/token"
         payload = {
@@ -190,12 +154,10 @@ def spotify_callback(request):
         "client_secret": settings.SPOTIFY_CLIENT_SECRET,
     }
     response = requests.post(token_url, data=payload)
-    print("callback: ", response.content)
     token_data = response.json()
 
     if "access_token" in token_data:
         user = cache.get('User')  # Retrieve the user from
-        print("hey: ",user)
         SpotifyToken.objects.update_or_create(
             user=user,
             defaults={
@@ -206,7 +168,6 @@ def spotify_callback(request):
                 ),
             },
         )
-        print("after setting", user)
         cache.delete('User')
         return redirect("index")
     return redirect("error")
