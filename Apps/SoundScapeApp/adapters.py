@@ -6,7 +6,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         """
         Redirect the user to connect their Spotify account after logging in.
         """
-        print("post_login")
         if not hasattr(user, 'spotifytoken'):  # Check if Spotify is already linked
             print("no token")
             return redirect('spotify_login')  # Redirect to Spotify OAuth

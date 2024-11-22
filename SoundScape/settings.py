@@ -164,6 +164,14 @@ ACCOUNT_USERNAME_REQUIRED = True
 ACCOUNT_SIGNUP_REDIRECT_URL = '/index/'  # Redirect after signup
 ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 
-# Optional settings
-ACCOUNT_SESSION_REMEMBER = True  # Keep users logged in after closing browser
-ACCOUNT_LOGOUT_ON_GET = True  # Log out immediately when logout URL is visited
+# settings.py
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://127.0.0.1:6379/1',  # Redis database 1
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
