@@ -29,6 +29,8 @@ SECRET_KEY = os.getenv('DJANGO_SECERT_KEY')
 SPOTIFY_CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 SPOTIFY_CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 SPOTIFY_REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
+REDIS_LOCATION = os.getenv('REDIS_LOCATION')
+EC2_PUBLIC_IP = os.getenv('EC2_PUBLIC_IP')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -36,7 +38,8 @@ DEBUG = True
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
-    '.elasticbeanstalk.com'
+    '.elasticbeanstalk.com',
+    EC2_PUBLIC_IP
 ]
 
 
@@ -161,7 +164,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://127.0.0.1:6379/1',
+        'LOCATION': REDIS_LOCATION,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
