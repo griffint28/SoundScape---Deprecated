@@ -37,13 +37,15 @@
         </select>
     </form>
 
-    <ul>
+    <ul class = "artist-container">
         {% for artist in top_artists %}
-            <li>
-                <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
-                <strong>{{ artist.name }}</strong><br>
-                Genres: {{ artist.genres|join:", " }}<br>
-                Popularity: {{ artist.popularity }}
+            <li class = "artist-box">
+                <a href="{{ artist.external_urls.spotify }}" target="_blank">
+                    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
+                    <strong>{{ artist.name }}</strong><br>
+                    Genres: {{ artist.genres|join:", " }}<br>
+                    Popularity: {{ artist.popularity }}
+                    </a>
             </li>
         {% endfor %}
     </ul>

@@ -42,11 +42,17 @@ def top_tracks(request):
 
     response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
 
-    if response.status_code == 401: #Token expired
-        spotify_login(request, status='Expired')
-        response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
-
     if response.status_code == 200:
+        return render(request, 'UsersTopTracks.html', {'tracks': response.json()['items'], 'time_range': time_range})
+    elif response.status_code == 401:
+        print("Token expired, refreshing")
+        spotify_login(request, status='Expired')
+        access_token = SpotifyToken.objects.get(user=request.user).access_token
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+        }
+        response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
+        print(response.json())
         return render(request, 'UsersTopTracks.html', {'tracks': response.json()['items'], 'time_range': time_range})
     else:
         return None
@@ -106,15 +112,20 @@ def recommendations(request):
         artistsResponseIDs.append(artist['id'])
         artistsGenres.append(artist['genres'][0])
 
+
+    print(tracksResponse.status_code, artistsResponse.status_code)
+
     seed_artists = artistsResponseIDs[0]
     seed_tracks = tracksResponseIDs[0]
     seed_genres = artistsGenres[0]
 
-    response =requests.get('https://api.spotify.com/v1/recommendations?'
+    response = requests.get('https://api.spotify.com/v1/recommendations?'
                            'seed_artists=' + seed_artists
                            + '&seed_genres=' + seed_genres
                            + '&seed_tracks=' + seed_tracks
                            + '&max_popularity=70', headers=headers)
+
+    print(response.reason)
 
     recTracks = []
     for recTrack in response.json()['tracks']:
