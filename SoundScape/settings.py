@@ -164,7 +164,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Redirect after logout
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': 'redis://localhost:6379/0',
+        'LOCATION': REDIS_LOCATION,
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         }
