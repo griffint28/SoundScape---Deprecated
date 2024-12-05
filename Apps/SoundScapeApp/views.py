@@ -84,55 +84,6 @@ def top_artists(request):
         # Handle error response
         return None
 
-@login_required
-def recommendations(request):
-    #TODO: Error handling for when user is not in token table
-    #TODO: Error handling for each case (top tracks, top artists, and recommendations)
-    #TODO: Error for end user
-    #TODO: Add CSS for layout of recommendations
-
-    access_token = SpotifyToken.objects.get(user=request.user).access_token
-    headers = {
-        'Authorization': f'Bearer {access_token}',
-    }
-
-    time_range = request.GET.get('time_range', 'medium_term')
-
-    tracksResponse = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
-    artistsResponse = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
-
-    tracksResponseIDs = []
-    for track in tracksResponse.json()['items']:
-        tracksResponseIDs.append(track['id'])
-
-
-    artistsResponseIDs = []
-    artistsGenres = []
-    for artist in artistsResponse.json()['items']:
-        artistsResponseIDs.append(artist['id'])
-        artistsGenres.append(artist['genres'][0])
-
-
-    print(tracksResponse.status_code, artistsResponse.status_code)
-
-    seed_artists = artistsResponseIDs[0]
-    seed_tracks = tracksResponseIDs[0]
-    seed_genres = artistsGenres[0]
-
-    response = requests.get('https://api.spotify.com/v1/recommendations?'
-                           'seed_artists=' + seed_artists
-                           + '&seed_genres=' + seed_genres
-                           + '&seed_tracks=' + seed_tracks
-                           + '&max_popularity=70', headers=headers)
-
-    print(response.reason)
-
-    recTracks = []
-    for recTrack in response.json()['tracks']:
-        recTracks.append(recTrack['name'] + ' by ' + recTrack['artists'][0]['name'])
-
-    return render(request, 'Recommendations.html', {'recTracks': response.json()['tracks']})
-
 def spotify_login(request, status=None):
     #TODO: Error handling for when user is not in token table
 
