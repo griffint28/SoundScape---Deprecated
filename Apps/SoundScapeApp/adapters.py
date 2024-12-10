@@ -9,3 +9,6 @@ class CustomAccountAdapter(DefaultAccountAdapter):
         if not hasattr(user, 'spotifytoken'):  #Check if Spotify is already linked
             return redirect('spotify_login')  #Redirect to Spotify OAuth
         return super().post_login(request, user, *args, **kwargs)
+
+    def get_login_redirect_url(self, request):
+        return '/index/'
