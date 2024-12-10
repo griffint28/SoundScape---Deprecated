@@ -10,6 +10,7 @@ urlpatterns = [
     path('accounts/profile/', views.profile_view, name='profile_view'),
     path('top-tracks/', views.top_tracks, name='top_tracks'),
     path('top-artists/', views.top_artists, name='top_artists'),
+    path('jokes/', views.jokes, name='jokes'),
 
     #process for logining spotify
     path('spotify-login/', views.spotify_login, name='spotify_login'),

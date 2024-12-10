@@ -7,11 +7,13 @@ import requests
 from datetime import datetime, timedelta
 from django.core.cache import cache
 
+from Apps.SoundScapeApp.helper import generate_jokes
 from Apps.SoundScapeApp.models import SpotifyToken
 
 #TODO: Helper functions for obtaining user's top tracks, top artists, and recommendations
 #TODO: Change scope to allow for recommendations to be saved to user's spotify account
 #TODO: Add error handling for end user, make it where all errors are displayed for development
+#TODO: Add centralized CSS file for all pages
 
 def home(request):
     return render(request, 'Home.html')
@@ -43,6 +45,7 @@ def top_tracks(request):
     response = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range, headers=headers)
 
     if response.status_code == 200:
+        cache.set('top_tracks', response.json()['items'][:5], timeout=60*15)  #Grab top 5, cache for 15 minutes
         return render(request, 'UsersTopTracks.html', {'tracks': response.json()['items'], 'time_range': time_range})
     elif response.status_code == 401:
         print("Token expired, refreshing")
@@ -78,11 +81,51 @@ def top_artists(request):
         response = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range, headers=headers)
 
     if response.status_code == 200:
+        cache.set('top_artists', response.json()['items'][:5], timeout=60*15)  # Grab top 5, cache for 15 minutes
         return render(request, 'UsersTopArtists.html', {'top_artists': response.json()['items'],  'time_range': time_range})
     # Return the user's top tracks data
     else:
         # Handle error response
         return None
+
+@login_required
+def jokes(request):
+    top_tracks, top_artists = None, None
+    if cache.get('top_artists') is None and cache.get('top_tracks') is None:
+        access_token = SpotifyToken.objects.get(user=request.user).access_token
+
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+        }
+        time_range = request.GET.get('time_range', 'medium_term')
+
+        top_tracks = requests.get('https://api.spotify.com/v1/me/top/tracks?time_range=' + time_range + 'limit=5', headers=headers)
+
+        access_token = SpotifyToken.objects.get(user=request.user).access_token
+        headers = {
+            'Authorization': f'Bearer {access_token}',
+        }
+
+        time_range = request.GET.get('time_range', 'medium_term')
+
+        top_artists = requests.get('https://api.spotify.com/v1/me/top/artists?time_range=' + time_range + 'limit=5', headers=headers)
+    else:
+        top_tracks = cache.get('top_tracks')
+        top_artists = cache.get('top_artists')
+
+    formattedTracks, formattedArtists = [], []
+    for track in top_tracks:
+        formattedTracks.append(str(dict(track)['name']) + " by " + str(dict(track)['artists'][0]['name']))
+    print(top_artists)
+    for artist in top_artists:
+        formattedArtists.append(str(dict(artist)['name']))
+
+    print(formattedTracks)
+    print(formattedArtists)
+
+    response = generate_jokes(formattedTracks, formattedArtists)
+    print(response)
+    return render(request, 'UsersJokes.html', context={'jokes': response})
 
 def spotify_login(request, status=None):
     #TODO: Error handling for when user is not in token table
