@@ -1,2 +1,2 @@
 # SoundScape
-Stable web application, but on pause after unforeseen changes to Spotify's API that have removed endpoints that were important. 
+http://soundscape.us-east-1.elasticbeanstalk.com
