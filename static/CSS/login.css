@@ -1,4 +1,6 @@
 body {
+    background-image: url('../Images/BackgroundAlt.png');
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -14,6 +16,7 @@ body {
     background-color: rgba(17, 24, 39, 1);
     padding: 2rem;
     color: rgba(243, 244, 246, 1);
+    max-width: 90%;
 }
 
 .title {
@@ -92,7 +95,7 @@ body {
 
 .line {
     height: 1px;
-    flex: 1 1 0%;
+    flex: 1 1 0;
     background-color: rgba(55, 65, 81, 1);
 }
 
@@ -128,4 +131,37 @@ body {
     font-size: 0.75rem;
     line-height: 1rem;
     color: rgba(156, 163, 175, 1);
+}
+
+/* Force form labels to appear above their corresponding inputs */
+form label {
+    display: block; /* Make labels block-level elements so they take up a full line */
+    margin-bottom: 0.5rem; /* Add space between the label and the input */
+}
+
+form input, form select, form textarea {
+    display: block; /* Keep inputs as block-level elements for consistency */
+    width: 100%; /* Ensure the input fields stretch full width inside containers */
+    margin-bottom: 1rem; /* Add spacing between input fields */
+    padding: 0.75rem; /* Add padding for a better UX */
+    font-size: 1rem; /* Adjust font size for readability */
+    box-sizing: border-box; /* Ensure padding is included in width calculation */
+}
+
+.app-banner {
+    position: fixed; /* Ensures it always stays at the top */
+    top: 0; /* Aligns it to the top of the window */
+    left: 0; /* Aligns it to the left of the window */
+    width: 100%; /* Makes it stretch across the full width */
+    background-color: #000000; /* Adjust background color as needed */
+    color: #ffffff; /* Text color */
+    padding: 5px 10px; /* Add some spacing inside */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a nice effect */
+    z-index: 1000; /* Ensures it stays above other elements */
+    text-align: center; /* Keeps text in the center horizontally */
+}
+
+.main-content {
+    padding: 1rem; /* Add padding to ensure spacing */
+    margin-top: 0; /* No overlapping */
 }
