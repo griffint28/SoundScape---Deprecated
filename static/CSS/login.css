@@ -165,3 +165,16 @@ form input, form select, form textarea {
     padding: 1rem; /* Add padding to ensure spacing */
     margin-top: 0; /* No overlapping */
 }
+
+#id_remember {
+    display: inline-block; /* Ensure it behaves as an inline element */
+    width: auto; /* Allow native width for the checkbox */
+    height: auto; /* Allow native height for the checkbox */
+    margin: 0; /* Reset any unwanted margins */
+    margin-left: 8px; /* Add spacing between checkbox and label */
+    cursor: pointer; /* Add pointer cursor on hover */
+}
+
+label[for="id_remember"] {
+    display: inline-block; /* Ensure the label aligns with the checkbox */
+}
