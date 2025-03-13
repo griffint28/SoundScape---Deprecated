@@ -1,13 +1,11 @@
 /* Reset default styles */
-html, body {
-    margin: 0;
+body {
+    margin: 0; /* Remove default body margin */
     padding: 0;
-    background-color: #f2f2f2;
 }
 
-/* Set a background color */
-body {
-    background-color: #f2f2f2;
+html, body {
+    height: 100%; /* Let body take full height of the page */
 }
 
 /* Center the content */
