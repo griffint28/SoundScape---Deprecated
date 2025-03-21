@@ -1,34 +1,40 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Spotify Song Search</title>
-</head>
-<body>
-<h1>Spotify Song Search</h1>
+{% extends "global/base.html" %}
 
-<!-- Search form -->
-<form method="get">
-    <label>
-        "Search for a song in Spotify's library"
-        <input type="text" name="q" placeholder="Search for a song or artist" value="{{ query }}">
-    </label>
-    <button type="submit">Search</button>
-</form>
 
-<!-- Display fetched songs -->
-{% if songs %}
-    <ul>
-        {% for song in songs %}
-            <li>
-                <strong>{{ song.name }}</strong> by {{ song.artists.0.name }} <br>
-                <img src="{{ song.album.images.0.url }}" alt="{{ song.name }}" width="100">
-            </li>
-        {% endfor %}
-    </ul>
-{% else %}
-    {% if query %}
-        <p>No results found for "{{ query }}".</p>
+{% load i18n %}
+
+{% block content %}
+
+    <head>
+        <title>Spotify Song Search</title>
+    </head>
+    <body>
+    <h1>Spotify Song Search</h1>
+
+    <!-- Search form -->
+    <form method="get">
+        <label>
+            "Search for a song in Spotify's library"
+            <input type="text" name="q" placeholder="Search for a song or artist" value="{{ query }}">
+        </label>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Display fetched songs -->
+    {% if songs %}
+        <ul>
+            {% for song in songs %}
+                <li>
+                    <strong>{{ song.name }}</strong> by {{ song.artists.0.name }} <br>
+                    <img src="{{ song.album.images.0.url }}" alt="{{ song.name }}" width="100">
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        {% if query %}
+            <p>No results found for "{{ query }}".</p>
+        {% endif %}
     {% endif %}
-{% endif %}
-</body>
-</html>
+    </body>
+
+{% endblock %}

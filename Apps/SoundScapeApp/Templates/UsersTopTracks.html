@@ -1,66 +1,70 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Tracks</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'CSS/toptracks.css' %}">
-</head>
-<body>
-<header>
-    {% include "Global/nav.html" %}
-</header>
+{% extends "global/base.html" %}
 
-<main>
-    <h1>Your Top Tracks</h1>
+{% load i18n %}
 
-    <form method="get">
-        <label for="time_range">Select Time Range:</label>
-        <select name="time_range" id="time_range" onchange="this.form.submit()">
-            <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
-            <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
-            <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
-        </select>
-    </form>
+{% block content %}
 
-    <ul class = "track-container">
-        {% for track in tracks %}
-            <li class = "track-box">
-                <a href = "{{ track.external_urls.spotify }}" target="_blank">
-                    <strong>{{ track.name }}</strong>
-                    <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}" width="100">
-                    {{ track.artists.0.name }}
-                </a>
-            </li>
-        {% endfor %}
-    </ul>
-</main>
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Top Tracks</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/toptracks.css' %}">
+    </head>
+    <body>
+    <header>
+        {% include "global/nav.html" %}
+    </header>
 
-{% if user.is_authenticated %}
-    <a href="{% url 'account_logout' %}">Logout</a>
-{% endif %}
-<footer>
-    <p>&copy; 2022 Music Web App. All rights reserved.</p>
-</footer>
-<script>
-    function toggleMenu() {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        nav.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    }
+    <main>
+        <h1>Your Top Tracks</h1>
 
-    document.addEventListener('click', function(event) {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+        <form method="get">
+            <label for="time_range">Select Time Range:</label>
+            <select name="time_range" id="time_range" onchange="this.form.submit()">
+                <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
+                <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
+                <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
+            </select>
+        </form>
 
-        if (!isClickInside) {
-            nav.classList.remove('active');
-            hamburger.classList.remove('active');
+        <ul class = "track-container">
+            {% for track in tracks %}
+                <li class = "track-box">
+                    <a href = "{{ track.external_urls.spotify }}" target="_blank">
+                        <strong>{{ track.name }}</strong>
+                        <img src="{{ track.album.images.0.url }}" alt="{{ track.name }}" width="100">
+                        {{ track.artists.0.name }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+
+    {% if user.is_authenticated %}
+        <a href="{% url 'account_logout' %}">Logout</a>
+    {% endif %}
+    <footer>
+        <p>&copy; 2022 Music Web App. All rights reserved.</p>
+    </footer>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
         }
-    });
 
-</script>
-</body>
-</html>
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+    </script>
+    </body>
+{% endblock %}

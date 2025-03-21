@@ -1,39 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Artists</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
-</head>
-<body>
-<header>
-    {% include "Global/nav.html" %}
-</header>
-<main>
-    <p class = typing-effect>
-        {{ jokes }}
-    </p>
-</main>
-<script>
-    function toggleMenu() {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        nav.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    }
+{% extends "global/base.html" %}
 
-    document.addEventListener('click', function(event) {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+{% load i18n %}
 
-        if (!isClickInside) {
-            nav.classList.remove('active');
-            hamburger.classList.remove('active');
+{% block content %}
+
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Top Artists</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
+    </head>
+    <body>
+    <header>
+        {% include "global/nav.html" %}
+    </header>
+    <main>
+        <p class = typing-effect>
+            {{ jokes }}
+        </p>
+    </main>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
         }
-    });
 
-</script>
-</body>
-</html>
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+    </script>
+    </body>
+{% endblock %}

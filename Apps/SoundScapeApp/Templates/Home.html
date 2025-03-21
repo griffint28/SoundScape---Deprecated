@@ -1,13 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends "global/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
     <head>
-        <title>{% block title %}My Site{% endblock %}</title>
-        {% load static %}
-        <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
+        <title>{% block title %}SoundScape{% endblock %}</title>
     </head>
-    <body>
-        <h1>Welcome to the Music Web App!</h1>
-        <p>Already have an account? <a href="{% url 'account_login' %}">Log in</a></p>
-        <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
+    <body>s
+        <div class="landing-content">
+            <h1>Welcome to SoundScape!</h1>
+            <p>Already have an account? <a href="{% url 'account_login' %}">Log in</a></p>
+            <p>Don't have an account? <a href="{% url 'account_signup' %}">Sign up</a></p>
+        </div>
     </body>
-</html>
+
+{% endblock %}

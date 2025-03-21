@@ -8,7 +8,7 @@ html, body {
 
 #HomeBackground{
     margin: 0;
-    background-image: url('../Images/HomePic.png');
+    /*background-image: url('../Images/HomePic.png');*/
     background-size: cover;
     background-position: center;
     display: flex;

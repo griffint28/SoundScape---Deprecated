@@ -1,59 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top Artists</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
-</head>
-<body>
-<header>
-    {% include "Global/nav.html" %}
-</header>
-<main>
-    <h1>Most Listened-To Artists</h1>
+{% extends "global/base.html" %}
 
-    <form method="get">
-        <label for="time_range">Select Time Range:</label>
-        <select name="time_range" id="time_range" onchange="this.form.submit()">
-            <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
-            <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
-            <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
-        </select>
-    </form>
+{% load i18n %}
 
-    <ul class = "artist-container">
-        {% for artist in top_artists %}
-            <li class = "artist-box">
-                <a href="{{ artist.external_urls.spotify }}" target="_blank">
-                    <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
-                    <strong>{{ artist.name }}</strong><br>
-                    Genres: {{ artist.genres|join:", " }}<br>
-                    Popularity: {{ artist.popularity }}
-                    </a>
-            </li>
-        {% endfor %}
-    </ul>
-</main>
-<script>
-    function toggleMenu() {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        nav.classList.toggle('active');
-        hamburger.classList.toggle('active');
-    }
+{% block content %}
 
-    document.addEventListener('click', function(event) {
-        const nav = document.querySelector('nav ul');
-        const hamburger = document.querySelector('.hamburger');
-        const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Top Artists</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
+    </head>
+    <body>
+    <header>
+        {% include "global/nav.html" %}
+    </header>
+    <main>
+        <h1>Most Listened-To Artists</h1>
 
-        if (!isClickInside) {
-            nav.classList.remove('active');
-            hamburger.classList.remove('active');
+        <form method="get">
+            <label for="time_range">Select Time Range:</label>
+            <select name="time_range" id="time_range" onchange="this.form.submit()">
+                <option value="short_term" {% if time_range == 'short_term' %}selected{% endif %}>Last 4 Weeks</option>
+                <option value="medium_term" {% if time_range == 'medium_term' %}selected{% endif %}>Last 6 Months</option>
+                <option value="long_term" {% if time_range == 'long_term' %}selected{% endif %}>All Time</option>
+            </select>
+        </form>
+
+        <ul class = "artist-container">
+            {% for artist in top_artists %}
+                <li class = "artist-box">
+                    <a href="{{ artist.external_urls.spotify }}" target="_blank">
+                        <img src="{{ artist.images.0.url }}" alt="{{ artist.name }}'s image" width="100">
+                        <strong>{{ artist.name }}</strong><br>
+                        Genres: {{ artist.genres|join:", " }}<br>
+                        Popularity: {{ artist.popularity }}
+                        </a>
+                </li>
+            {% endfor %}
+        </ul>
+    </main>
+    <script>
+        function toggleMenu() {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            nav.classList.toggle('active');
+            hamburger.classList.toggle('active');
         }
-    });
 
-</script>
-</body>
-</html>
+        document.addEventListener('click', function(event) {
+            const nav = document.querySelector('nav ul');
+            const hamburger = document.querySelector('.hamburger');
+            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+            if (!isClickInside) {
+                nav.classList.remove('active');
+                hamburger.classList.remove('active');
+            }
+        });
+
+    </script>
+    </body>
+
+{% endblock %}

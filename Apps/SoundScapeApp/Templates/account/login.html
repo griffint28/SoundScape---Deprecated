@@ -1,8 +1,14 @@
-{% extends "base.html" %}
+{% extends "global/base.html" %}
 
 {% load i18n %}
 
 {% block content %}
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>SoundScape</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/user_auth.css' %}">
+    </head>
     <div class="form-container">
         <h1>{% trans "Log In" %}</h1>
         <form method="post">
