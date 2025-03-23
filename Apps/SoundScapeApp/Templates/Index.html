@@ -9,38 +9,31 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
     </head>
-    <body>
-        <header>
-            {% include "global/nav.html" %}
-        </header>
-        <main>
-            <section>
-                <h1 id = "HomeBackground">Welcome {{ user.username }} to SoundScape</h1>
-            </section>
-            <section>
-                <h2>Featured Artists</h2>
-                <ul>
-                    <li>Artist 1</li>
-                    <li>Artist 2</li>
-                    <li>Artist 3</li>
-                </ul>
-            </section>
+    {% include "global/nav.html" %}
+    <main>
+        <section>
+            <h1 id = "HomeBackground">Welcome {{ user.username }} to SoundScape</h1>
+        </section>
+        <section>
+            <h2>Featured Artists</h2>
+            <ul>
+                <li>Artist 1</li>
+                <li>Artist 2</li>
+                <li>Artist 3</li>
+            </ul>
+        </section>
 
-            <section>
-                <h2>Popular Playlists</h2>
-                <ul>
-                    <li>Playlist 1</li>
-                    <li>Playlist 2</li>
-                    <li>Playlist 3</li>
-                </ul>
-            </section>
-        </main>
+        <section>
+            <h2>Popular Playlists</h2>
+            <ul>
+                <li>Playlist 1</li>
+                <li>Playlist 2</li>
+                <li>Playlist 3</li>
+            </ul>
+        </section>
         {% if user.is_authenticated %}
             <a href="{% url 'account_logout' %}">Logout</a>
         {% endif %}
-        <footer>
-            <p>&copy; 2022 Music Web App. All rights reserved.</p>
-        </footer>
         <script>
             function toggleMenu() {
                 const nav = document.querySelector('nav ul');
@@ -61,6 +54,6 @@
             });
 
         </script>
-    </body>
+    </main>
 
 {% endblock %}

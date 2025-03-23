@@ -8,17 +8,11 @@ body {
     margin: 0;
     font-family: Arial, sans-serif; /* Optional for cleaner font */
     background-color: #000000; /* Add a subtle background color if needed */
+    height: 100%;
 }
 
 header {
-    position: relative; /* Default positioning */
-    z-index: 1; /* Ensure it's below app-banner if needed */
     background-color: #fff; /* Navbar background */
-}
-
-main {
-    margin: 0 auto;
-    padding-top: 20px; /* Add padding equivalent to banner height */
 }
 
 .landing-content{
@@ -32,23 +26,45 @@ main {
 }
 
 .app-banner {
-    position: fixed; /* Ensures it always stays at the top */
+    display: block;
+    position: relative; /* Ensures it always stays at the top */
     top: 0; /* Aligns it to the top of the window */
     left: 0; /* Aligns it to the left of the window */
     width: 100%; /* Makes it stretch across the full width */
     background-color: #000000; /* Adjust background color as needed */
     color: #ffffff; /* Text color */
-    padding: 5px 10px; /* Add some spacing inside */
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Optional shadow for a nice effect */
-    z-index: 1000; /* Ensures it stays above other elements */
+    z-index: 1; /* Ensures it stays above other elements */
     text-align: center; /* Keeps text in the center horizontally */
-}
-
-.app-banner h1{
-    display: block;
+    order: 1;
 }
 
 .main-content {
-    padding: 1rem; /* Add padding to ensure spacing */
+    width: 100%;
+    padding: 0; /* Add padding to ensure spacing */
     margin-top: 0; /* No overlapping */
 }
+
+.layout-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column; /* Stack children vertically */
+}
+
+main {
+    display: flex;                /* Enable Flexbox */
+    justify-content: center;      /* Centers horizontally */
+    align-items: center;          /* Centers vertically */
+    height: 100vh;                /* Full viewport height */
+    width: 100%;                  /* Full width of the viewport */
+    margin: 0;                    /* Removes unwanted margins */
+    padding: 0;                   /* Removes padding */
+    box-sizing: border-box;       /* Ensures consistent box model handling */
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+

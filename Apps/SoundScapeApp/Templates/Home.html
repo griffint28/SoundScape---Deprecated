@@ -4,7 +4,10 @@
 
 {% block content %}
     <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>{% block title %}SoundScape{% endblock %}</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/home.css' %}">
     </head>
     <body>s
         <div class="landing-content">

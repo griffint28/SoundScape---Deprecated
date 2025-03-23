@@ -6,6 +6,7 @@ html, body {
     font: 16px/1.5 'Open Sans', sans-serif;
 }
 
+
 #HomeBackground{
     margin: 0;
     /*background-image: url('../Images/HomePic.png');*/
@@ -40,25 +41,22 @@ a:active {
 }
 
 header{
-    position: fixed;
     top: 0;
     width: 100%;
-    z-index: 1000;
     background-color: #c1bfb5;
     transition: height 0.3s ease;
 }
 
-main {
-    margin-top: 50px; /* Adjust this value to match the height of your header */
-}
-
 /* Navigation Bar */
 nav {
+    display: block;
     background-color: #c1bfb5;
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
-    z-index: 1000;
+    z-index: 2;
+    order: 2;
+    float: none;
 }
 
 nav ul {
