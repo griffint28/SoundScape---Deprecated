@@ -51,6 +51,12 @@ header {
     flex-direction: column; /* Stack children vertically */
 }
 
+.auth-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 main {
     display: flex;                /* Enable Flexbox */
     justify-content: center;      /* Centers horizontally */
@@ -60,6 +66,7 @@ main {
     margin: 0;                    /* Removes unwanted margins */
     padding: 0;                   /* Removes padding */
     box-sizing: border-box;       /* Ensures consistent box model handling */
+    flex-direction: column;
 }
 
 footer {

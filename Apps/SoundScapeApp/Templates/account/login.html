@@ -9,16 +9,18 @@
         {% load static %}
         <link rel="stylesheet" href="{% static 'CSS/user_auth.css' %}">
     </head>
-    <div class="form-container">
-        <h1>{% trans "Log In" %}</h1>
-        <form method="post">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button type="submit" class="btn btn-primary">{% trans "Log In" %}</button>
-        </form>
-        <p>
-            {% trans "Don't have an account?" %}
-            <a href="{% url 'account_signup' %}">{% trans "Sign Up here" %}</a>.
-        </p>
-    </div>
+    <main>
+        <div class="form-container">
+            <h1>{% trans "Log In" %}</h1>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">{% trans "Log In" %}</button>
+            </form>
+            <p>
+                {% trans "Don't have an account?" %}
+                <a href="{% url 'account_signup' %}">{% trans "Sign Up here" %}</a>.
+            </p>
+        </div>
+    </main>
 {% endblock %}
