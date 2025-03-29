@@ -1,15 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music Web App</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
-</head>
-<body>
-    <header>
-        {% include "Global/nav.html" %}
-    </header>
+{% extends "global/base.html" %}
+
+{% load i18n %}
+
+{% block content %}
+    <head>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Music Web App</title>
+        {% load static %}
+        <link rel="stylesheet" href="{% static 'CSS/index.css' %}">
+    </head>
+    {% include "global/nav.html" %}
     <main>
         <section>
             <h1 id = "HomeBackground">Welcome {{ user.username }} to SoundScape</h1>
@@ -22,7 +22,7 @@
                 <li>Artist 3</li>
             </ul>
         </section>
-        
+
         <section>
             <h2>Popular Playlists</h2>
             <ul>
@@ -31,32 +31,29 @@
                 <li>Playlist 3</li>
             </ul>
         </section>
-    </main>
-    {% if user.is_authenticated %}
-        <a href="{% url 'account_logout' %}">Logout</a>
-    {% endif %}
-    <footer>
-        <p>&copy; 2022 Music Web App. All rights reserved.</p>
-    </footer>
-    <script>
-        function toggleMenu() {
-            const nav = document.querySelector('nav ul');
-            const hamburger = document.querySelector('.hamburger');
-            nav.classList.toggle('active');
-            hamburger.classList.toggle('active');
-        }
-
-        document.addEventListener('click', function(event) {
-            const nav = document.querySelector('nav ul');
-            const hamburger = document.querySelector('.hamburger');
-            const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
-
-            if (!isClickInside) {
-                nav.classList.remove('active');
-                hamburger.classList.remove('active');
+        {% if user.is_authenticated %}
+            <a href="{% url 'account_logout' %}">Logout</a>
+        {% endif %}
+        <script>
+            function toggleMenu() {
+                const nav = document.querySelector('nav ul');
+                const hamburger = document.querySelector('.hamburger');
+                nav.classList.toggle('active');
+                hamburger.classList.toggle('active');
             }
-        });
 
-    </script>
-</body>
-</html>
+            document.addEventListener('click', function(event) {
+                const nav = document.querySelector('nav ul');
+                const hamburger = document.querySelector('.hamburger');
+                const isClickInside = nav.contains(event.target) || hamburger.contains(event.target);
+
+                if (!isClickInside) {
+                    nav.classList.remove('active');
+                    hamburger.classList.remove('active');
+                }
+            });
+
+        </script>
+    </main>
+
+{% endblock %}
