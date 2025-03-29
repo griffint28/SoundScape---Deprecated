@@ -1,0 +1,48 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #000100;
+    color: #fefdff;
+    font: 16px/1.5 'Open Sans', sans-serif;
+}
+
+main {
+    justify-content: normal;
+}
+
+.artist-box {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, box-shadow 0.2s;
+    text-align: center;
+}
+
+.artist-box:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.9);
+}
+
+.artist-box img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin-bottom: 8px;
+}
+
+.artist-box strong {
+    font-size: 1.2em;
+    margin: 8px 0 4px;
+    color: #333;
+}
+
+.artist-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    padding: 16px;
+    list-style-type: none;
+}
+

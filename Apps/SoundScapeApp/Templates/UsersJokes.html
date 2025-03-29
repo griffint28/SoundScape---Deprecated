@@ -8,16 +8,16 @@
         <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
         <title>Top Artists</title>
         {% load static %}
-        <link rel="stylesheet" href="{% static 'CSS/topartists.css' %}">
+        <link rel="stylesheet" href="{% static 'CSS/user_jokes.css' %}">
     </head>
     <body>
-    <header>
-        {% include "global/nav.html" %}
-    </header>
+    {% include "global/nav.html" %}
     <main>
-        <p class = typing-effect>
-            {{ jokes }}
-        </p>
+        <section>
+            <p class = typing-effect>
+                {{ jokes }}
+            </p>
+        </section>
     </main>
     <script>
         function toggleMenu() {

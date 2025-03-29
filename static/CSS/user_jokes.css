@@ -1,0 +1,11 @@
+html, body {
+    margin: 0;
+    padding: 0;
+    background-color: #000100;
+    color: #fefdff;
+    font: 16px/1.5 'Open Sans', sans-serif;
+}
+
+main {
+    justify-content: normal;
+}
