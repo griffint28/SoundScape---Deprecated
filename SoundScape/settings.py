@@ -98,15 +98,39 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'SoundScape.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+
+import pymysql
+
+pymysql.install_as_MySQLdb()
+
+
+DATABASE_TYPE = os.getenv('DATABASE_TYPE', 'sqlite').lower()
+
+if DATABASE_TYPE == 'mysql':
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.mysql',
+            'NAME': os.getenv('AWS_DB_NAME'),
+            'USER': os.getenv('AWS_DB_USER'),
+            'PASSWORD': os.getenv('AWS_DB_PASSWORD'),
+            'HOST': os.getenv('AWS_DB_HOST'),
+            'PORT': os.getenv('AWS_DB_PORT'),
+            'OPTIONS': {
+                'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
+            },
+        }
     }
-}
+else:  # Fallback to SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / os.getenv('DB_NAME', 'db.sqlite3'),
+        }
+    }
+
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -175,3 +199,5 @@ CACHES = {
         }
     }
 }
+
+SITE_ID = 1
