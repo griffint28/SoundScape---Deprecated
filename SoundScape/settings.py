@@ -38,14 +38,38 @@ CHAT_GPT_ORGANIZATION = os.getenv('CHAT_GPT_ORGANIZATION')
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+#Django's debug mode, default option is false
+DEBUG = os.getenv('DEBUG', False)
 
 ALLOWED_HOSTS = [
     '127.0.0.1',
     'localhost',
     '.elasticbeanstalk.com',
+    'exploresoundscape.com',
     EC2_PUBLIC_IP
 ]
+
+#Enforces all HTTP requests to be redirected to HTTPS
+SECURE_SSL_REDIRECT = True
+
+#Configures the header that the proxy uses to indicate requests are HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+#Session cookies are only sent over HTTPS connections
+SESSION_COOKIE_SECURE = True
+
+#Ensures CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+#Configures the duration (in seconds) that browsers should enforce HTTPS requests
+SECURE_HSTS_SECONDS = 31536000  # One year
+
+#Applies HSTS to all subdomains of the website
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+#Site should be preloaded in browsers’ HSTS preload list
+SECURE_HSTS_PRELOAD = True
+
 
 
 # Application definition
