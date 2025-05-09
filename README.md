@@ -1,2 +1,2 @@
 # SoundScape
-http://soundscape.us-east-1.elasticbeanstalk.com
+[Link to SoundScape Prod](https://exploresoundscape.com/)
