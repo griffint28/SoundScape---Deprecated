@@ -88,6 +88,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django_extensions',
     'social_django',
+    "rest_framework",
+    "corsheaders",
 ]
 
 MIDDLEWARE = [
@@ -100,6 +102,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'SoundScape.urls'
@@ -225,3 +228,12 @@ CACHES = {
 }
 
 SITE_ID = 1
+
+# Allow React dev and prod
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vite dev
+    "https://yourdomain.com",  # production
+]
+
+# API-only: Disable CSRF for API views if needed
+CSRF_TRUSTED_ORIGINS = ["https://yourdomain.com"]

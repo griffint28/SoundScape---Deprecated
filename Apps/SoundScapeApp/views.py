@@ -1,4 +1,5 @@
 from django.contrib.auth.decorators import login_required
+from django.http import JsonResponse
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.conf import settings
@@ -227,3 +228,10 @@ def spotify_callback(request):
         return redirect("index")
 
     return redirect("error")
+
+
+def simple_data(request):
+    return JsonResponse({
+        "message": "Hello from Django!",
+        "items": ["React", "Django", "testing"]
+    })
