@@ -15,6 +15,9 @@ from pathlib import Path
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 load_dotenv()
 
@@ -49,26 +52,26 @@ ALLOWED_HOSTS = [
     EC2_PUBLIC_IP
 ]
 
-#Enforces all HTTP requests to be redirected to HTTPS
-SECURE_SSL_REDIRECT = True
-
-#Configures the header that the proxy uses to indicate requests are HTTPS
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-#Session cookies are only sent over HTTPS connections
-SESSION_COOKIE_SECURE = True
-
-#Ensures CSRF cookies are only sent over HTTPS
-CSRF_COOKIE_SECURE = True
-
-#Configures the duration (in seconds) that browsers should enforce HTTPS requests
-SECURE_HSTS_SECONDS = 31536000  # One year
-
-#Applies HSTS to all subdomains of the website
-SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-
-#Site should be preloaded in browsers’ HSTS preload list
-SECURE_HSTS_PRELOAD = True
+# #Enforces all HTTP requests to be redirected to HTTPS
+# SECURE_SSL_REDIRECT = True
+#
+# #Configures the header that the proxy uses to indicate requests are HTTPS
+# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+#
+# #Session cookies are only sent over HTTPS connections
+# SESSION_COOKIE_SECURE = True
+#
+# #Ensures CSRF cookies are only sent over HTTPS
+# CSRF_COOKIE_SECURE = True
+#
+# #Configures the duration (in seconds) that browsers should enforce HTTPS requests
+# SECURE_HSTS_SECONDS = 31536000  # One year
+#
+# #Applies HSTS to all subdomains of the website
+# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+#
+# #Site should be preloaded in browsers’ HSTS preload list
+# SECURE_HSTS_PRELOAD = True
 
 
 
@@ -89,7 +92,10 @@ INSTALLED_APPS = [
     'django_extensions',
     'social_django',
     "rest_framework",
+    'rest_framework.authtoken',
     "corsheaders",
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -127,11 +133,6 @@ WSGI_APPLICATION = 'SoundScape.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-import pymysql
-
-pymysql.install_as_MySQLdb()
-
 
 DATABASE_TYPE = os.getenv('DATABASE_TYPE', 'sqlite').lower()
 
@@ -232,8 +233,20 @@ SITE_ID = 1
 # Allow React dev and prod
 CORS_ALLOWED_ORIGINS = [
     "http://localhost:5173",  # Vite dev
-    "https://yourdomain.com",  # production
+    "https://exploresoundscape.com",  # production
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 # API-only: Disable CSRF for API views if needed
-CSRF_TRUSTED_ORIGINS = ["https://yourdomain.com"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://exploresoundscape.com"
+]
+
+REST_USE_JWT = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',     # <-- token-based
+    ],
+}

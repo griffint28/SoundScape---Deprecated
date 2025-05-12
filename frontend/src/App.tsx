@@ -1,5 +1,10 @@
 import { useEffect, useState } from "react";
 
+import Login from './pages/login';
+import Signup from './pages/signup';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Home from "./pages/home.tsx";
+
 function App() {
     const [data, setData] = useState<{ message: string; items: string[] } | null>(null);
 
@@ -20,6 +25,17 @@ function App() {
                     <li key={i} className="text-gray-700">{item}</li>
                 ))}
             </ul>
+            <Router>
+                <nav>
+                    <Link to="/login">Login</Link>
+                    <Link to="/signup">Register</Link>
+                </nav>
+                <Routes>
+                    <Route path="/login" element={<Login/>} />
+                    <Route path="/signup" element={<Signup/>} />
+                    <Route path="/home" element={<Home />} />
+                </Routes>
+            </Router>
         </div>
     );
 }
