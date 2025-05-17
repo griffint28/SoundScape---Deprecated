@@ -15,6 +15,9 @@ from pathlib import Path
 from pathlib import Path
 from dotenv import load_dotenv
 import os
+import pymysql
+
+pymysql.install_as_MySQLdb()
 
 load_dotenv()
 
@@ -88,6 +91,11 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'django_extensions',
     'social_django',
+    "rest_framework",
+    'rest_framework.authtoken',
+    "corsheaders",
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
 ]
 
 MIDDLEWARE = [
@@ -100,6 +108,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'allauth.account.middleware.AccountMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
 ]
 
 ROOT_URLCONF = 'SoundScape.urls'
@@ -124,11 +133,6 @@ WSGI_APPLICATION = 'SoundScape.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
-import pymysql
-
-pymysql.install_as_MySQLdb()
-
 
 DATABASE_TYPE = os.getenv('DATABASE_TYPE', 'sqlite').lower()
 
@@ -225,3 +229,24 @@ CACHES = {
 }
 
 SITE_ID = 1
+
+# Allow React dev and prod
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:5173",  # Vite dev
+    "https://exploresoundscape.com",  # production
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+# API-only: Disable CSRF for API views if needed
+CSRF_TRUSTED_ORIGINS = [
+    "https://exploresoundscape.com"
+]
+
+REST_USE_JWT = True
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',     # <-- token-based
+    ],
+}
