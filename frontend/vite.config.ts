@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api': 'http://localhost:8000', // proxies /api/* to Django
+      '/api': 'http://localhost:8000',
     },
   },
 })
