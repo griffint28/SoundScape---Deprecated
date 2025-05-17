@@ -52,26 +52,26 @@ ALLOWED_HOSTS = [
     EC2_PUBLIC_IP
 ]
 
-# #Enforces all HTTP requests to be redirected to HTTPS
-# SECURE_SSL_REDIRECT = True
-#
-# #Configures the header that the proxy uses to indicate requests are HTTPS
-# SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-#
-# #Session cookies are only sent over HTTPS connections
-# SESSION_COOKIE_SECURE = True
-#
-# #Ensures CSRF cookies are only sent over HTTPS
-# CSRF_COOKIE_SECURE = True
-#
-# #Configures the duration (in seconds) that browsers should enforce HTTPS requests
-# SECURE_HSTS_SECONDS = 31536000  # One year
-#
-# #Applies HSTS to all subdomains of the website
-# SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-#
-# #Site should be preloaded in browsers’ HSTS preload list
-# SECURE_HSTS_PRELOAD = True
+#Enforces all HTTP requests to be redirected to HTTPS
+SECURE_SSL_REDIRECT = True
+
+#Configures the header that the proxy uses to indicate requests are HTTPS
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+#Session cookies are only sent over HTTPS connections
+SESSION_COOKIE_SECURE = True
+
+#Ensures CSRF cookies are only sent over HTTPS
+CSRF_COOKIE_SECURE = True
+
+#Configures the duration (in seconds) that browsers should enforce HTTPS requests
+SECURE_HSTS_SECONDS = 31536000  # One year
+
+#Applies HSTS to all subdomains of the website
+SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+
+#Site should be preloaded in browsers’ HSTS preload list
+SECURE_HSTS_PRELOAD = True
 
 
 
