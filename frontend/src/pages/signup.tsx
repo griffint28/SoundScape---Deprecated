@@ -27,7 +27,7 @@ const RegistrationForm = () => {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 credentials: 'include',
-                body: JSON.stringify({ username, email, password }),
+                body: JSON.stringify({ username, email, password1: password, password2: confirmPassword }),
             });
 
             const data = await response.json();
@@ -36,7 +36,7 @@ const RegistrationForm = () => {
                 console.log('Registration successful!', data);
                 setSuccess(true);
                 // TODO, want to redirect the user or show a success message
-                // window.location.href = '/login';
+                window.location.href = '/api/spotify-login';
             } else {
                 let errorMessage = 'Registration failed.';
                 if (data && data.non_field_errors) {

@@ -9,7 +9,7 @@ function App() {
     const [data, setData] = useState<{ message: string; items: string[] } | null>(null);
 
     useEffect(() => {
-        fetch("http://localhost:8000/data/")
+        fetch("api/data/")
             .then((res) => res.json())
             .then(setData)
             .catch((err) => console.error("Fetch error:", err));
