@@ -27,8 +27,7 @@ const LoginForm = () => {
 
             if (response.ok) {
                 console.log('Login successful!', data);
-                //  TODO, Redirect to a logged-in page
-                //  window.location.href = '/dashboard';
+                window.location.href = '/api/spotify-login';
             } else {
                 let errorMessage = 'Login failed.';
                 if (data && data.non_field_errors) {

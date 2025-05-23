@@ -35,7 +35,6 @@ const RegistrationForm = () => {
             if (response.ok) {
                 console.log('Registration successful!', data);
                 setSuccess(true);
-                // TODO, want to redirect the user or show a success message
                 window.location.href = '/api/spotify-login';
             } else {
                 let errorMessage = 'Registration failed.';
