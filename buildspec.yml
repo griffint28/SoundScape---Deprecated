@@ -1,0 +1,19 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      python: 3.11
+      nodejs: 18
+    commands:
+      - pip install -r requirements.txt
+      - npm install --prefix frontend
+  build:
+    commands:
+      - npm run --prefix frontend build
+      - python manage.py collectstatic --noinput
+      - python manage.py migrate
+artifacts:
+  files:
+    - '**/*'
+    - '!frontend/node_modules/**/*'
