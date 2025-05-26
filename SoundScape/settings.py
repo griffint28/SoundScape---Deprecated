@@ -14,7 +14,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 from pathlib import Path
 
-from django.conf.global_settings import TEMPLATES
 from dotenv import load_dotenv
 import os
 import pymysql
@@ -116,9 +115,24 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'SoundScape.urls'
 
-TEMPLATES[0]['DIRS'] = [
-    os.path.join(BASE_DIR, 'frontend', 'build'),  # For index.html
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [os.path.join(BASE_DIR, 'frontend', 'build')],  # Add this to serve index.html
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
+            ],
+        },
+    },
 ]
+
+TEMPLATES[0]['DIRS'].append(os.path.join(BASE_DIR, 'frontend', 'build'))
+
 
 WSGI_APPLICATION = 'SoundScape.wsgi.application'
 
