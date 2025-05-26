@@ -226,7 +226,7 @@ def spotify_callback(request):
         #Clear cache and redirect the user to the index page
         cache.delete('User')
         #TODO: Local Dev vs Prod settings needed
-        return redirect("http://localhost:5173/dashboard")
+        return redirect("/dashboard")
 
     return redirect("error")
 

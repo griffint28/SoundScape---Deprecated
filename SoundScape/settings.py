@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 ##pip install pipdeptree
 from pathlib import Path
 from pathlib import Path
+
+from django.conf.global_settings import TEMPLATES
 from dotenv import load_dotenv
 import os
 import pymysql
@@ -109,24 +111,13 @@ MIDDLEWARE = [
     'allauth.account.middleware.AccountMiddleware',
     'social_django.middleware.SocialAuthExceptionMiddleware',
     "corsheaders.middleware.CorsMiddleware",
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'SoundScape.urls'
 
-TEMPLATES = [
-    {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'Apps/SoundScapeApp/Templates')],
-        'APP_DIRS': True,
-        'OPTIONS': {
-            'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-            ],
-        },
-    },
+TEMPLATES[0]['DIRS'] = [
+    os.path.join(BASE_DIR, 'frontend', 'build'),  # For index.html
 ]
 
 WSGI_APPLICATION = 'SoundScape.wsgi.application'
@@ -191,11 +182,12 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.getenv('STATIC_ROOT')
 STATICFILES_DIRS = [
-    BASE_DIR / 'static',
+    BASE_DIR / 'frontend' / 'dist' / 'assets',
 ]
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -232,7 +224,8 @@ SITE_ID = 1
 
 # Allow React dev and prod
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",  # Vite dev
+    "http://localhost:5173",
+    "https://localhost:5173",
     "https://exploresoundscape.com",  # production
 ]
 
@@ -240,6 +233,8 @@ CORS_ALLOW_CREDENTIALS = True
 
 # API-only: Disable CSRF for API views if needed
 CSRF_TRUSTED_ORIGINS = [
+    'http://localhost:5173',
+    'https://localhost:5173',
     "https://exploresoundscape.com"
 ]
 
